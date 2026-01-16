@@ -2,20 +2,19 @@ import pandas as pd
 
 fullGas = 'data/fullGas.csv'
 df = pd.read_csv(fullGas)
-df.columns = df.columns.str.lower()
-
+df.columns = df.columns.str.strip().str.lower()
 class Car:
-    def __init__(self, make, model, body, miliage, price, year, country, condition, fuel_type, fuel_consumption, drivetrain, gearbox, power_hp, seats, doors, full_service_history, non_smoker_vehicle, previous_owners, seller, image_url):
+    def __init__(self, make, model, body, mileage, price, year, country, condition, fuel_type, fuel_consumption, drivetrain, gearbox, power_hp, seats, doors, full_service_history, non_smoker_vehicle, previous_owners, seller, image_url):
         self.make = make
         self.model = model
         self.body = body
-        self.miliage = miliage
+        self.mileage = mileage
         self.price = price
         self.year = year
         self.country = country
         self.condition = condition
         self.fuel_type = fuel_type
-        self.consumo = fuel_consumption
+        self.fuel_consumption = fuel_consumption
         self.drivetrain = drivetrain
         self.gearbox = gearbox
         self.power_hp = power_hp
@@ -28,45 +27,76 @@ class Car:
         self.image_url = image_url
         
     def display_info(self):
-        info = f"Make: {self.make}\nModel: {self.model}\nBody: {self.body}\nMiliage: {self.miliage}\nPrice: {self.price}\nYear: {self.year}\nCountry: {self.country}\nCondition: {self.condition}\nFuel Type: {self.fuel_type}\nFuel Consumption: {self.consumo}\nDrivetrain: {self.drivetrain}\nGearbox: {self.gearbox}\nPower (HP): {self.power_hp}\nSeats: {self.seats}\nDoors: {self.doors}\nFull Service History: {self.full_service_history}\nNon-Smoker Vehicle: {self.non_smoker_vehicle}\nPrevious Owners: {self.previous_owners}\nSeller: {self.seller}\nImage URL: {self.image_url}"
+        info = f"Make: {self.make}\nModel: {self.model}\nBody: {self.body}\nMileage: {self.mileage}\nPrice: {self.price}\nYear: {self.year}\nCountry: {self.country}\nCondition: {self.condition}\nFuel Type: {self.fuel_type}\nFuel Consumption: {self.fuel_consumption}\nDrivetrain: {self.drivetrain}\nGearbox: {self.gearbox}\nPower (HP): {self.power_hp}\nSeats: {self.seats}\nDoors: {self.doors}\nFull Service History: {self.full_service_history}\nNon-Smoker Vehicle: {self.non_smoker_vehicle}\nPrevious Owners: {self.previous_owners}\nSeller: {self.seller}\nImage URL: {self.image_url}"
         return info
-    
-def search_cars_by_make(df):
+
+def search_cars(df):
+    filtered_df = df.copy()
+
     while True:
-        filter = int(input("Choose your filter\n\nOptions:\n\n1 - Make\n2 - Model\n3 - Body\n4 - Mileage\n5 - Price\n6 - Year\n7 - Country\n8 - Condition\n9 - Full Service History\n10 - Non Smoker Vehicle\n\nEnter your choice (1-10) or zero to skip filtering: "))
-        if filter >= 1 and filter <=10:
-            if filter == 1:
-                make = input("Enter the car make: ").lower()
-            elif filter == 2:
-                model = input("Enter the car model: ").lower()
-            elif filter == 3:
-                body = input("Enter the car body type: ").lower()
-            elif filter == 4:
-                mileage = int(input("Enter the maximum mileage (km): "))
-            elif filter == 5:
-                price = int(input("Enter the maximum price: "))
-            elif filter == 6:
-                year = int(input("Enter the minimum year: "))
-            elif filter == 7:
-                country = input("Enter the country: ").lower()
-            elif filter == 8:
-                condition = input("Enter the car condition: ").lower()
-            elif filter == 9:
-                full_service_history = input("Does the car have a full service history? (yes/no): ").lower()
-            elif filter == 10:
-                non_smoker_vehicle = input("Is the car a non-smoker vehicle? (yes/no): ").lower()
-        else:
-            print('Researching cars...')
+        print(f"\nCars currently found: {len(filtered_df)}")
+        
+        filter_opt = int(input("\nChoose your filter:\n1 - Make\n2 - Model\n3 - Body\n4 - Mileage (Max)\n5 - Price (Max)\n6 - Year (Min)\n7 - Country\n8 - Condition\n9 - Full Service History\n10 - Non Smoker Vehicle\n0 - SHOW RESULTS AND EXIT\n\nYour choice: "))
+        
+        if filter_opt == 0:
+            print('Generating car list...')
             break
-    
-    filtered_df = df[df['make'].str.lower() == make]
+            
+        elif filter_opt == 1:
+            val = input("Enter Make: ").lower()
+            filtered_df = filtered_df[filtered_df['make'].str.lower() == val]
+            
+        elif filter_opt == 2:
+            val = input("Enter Model: ").lower()
+            filtered_df = filtered_df[filtered_df['model'].str.lower().str.contains(val)]
+            
+        elif filter_opt == 3:
+            val = input("Enter Body type: ").lower()
+            filtered_df = filtered_df[filtered_df['body'].str.lower() == val]
+            
+        elif filter_opt == 4:
+            val = int(input("Enter MAXIMUM Mileage: "))
+            filtered_df = filtered_df[filtered_df['mileage_km'] <= val]
+            
+        elif filter_opt == 5:
+            val = int(input("Enter MAXIMUM Price: "))
+            filtered_df = filtered_df[filtered_df['price'] <= val]
+            
+        elif filter_opt == 6:
+            val = int(input("Enter MINIMUM Year: "))
+            filtered_df = filtered_df[filtered_df['year'] >= val]
+            
+        elif filter_opt == 7:
+            val = input("Enter Country: ").lower()
+            filtered_df = filtered_df[filtered_df['country'].str.lower() == val]
+            
+        elif filter_opt == 8:
+            val = input("Enter Condition: ").lower()
+            filtered_df = filtered_df[filtered_df['condition'].str.lower() == val]
+            
+        elif filter_opt == 9:
+            val = input("Full Service History? (yes/no): ").lower()
+            filtered_df = filtered_df[filtered_df['full_service_history'].astype(str).str.lower() == val]
+            
+        elif filter_opt == 10:
+            val = input("Non-Smoker Vehicle? (yes/no): ").lower()
+            filtered_df = filtered_df[filtered_df['non_smoker_vehicle'].astype(str).str.lower() == val]
+            
+        else:
+            print("Invalid option.")
+            
+        if filtered_df.empty:
+            print("\nNo cars found with these filters!")
+            return
+
     cars = []
+    
     for _, row in filtered_df.iterrows():
         car = Car(
             make=row['make'],
             model=row['model'],
             body=row['body'],
-            miliage=row['mileage_km'],
+            mileage=row['mileage_km'],
             price=row['price'],
             year=row['year'],
             country=row['country'],
@@ -85,8 +115,9 @@ def search_cars_by_make(df):
             image_url=row['image_url']
         )
         cars.append(car)
+        print("-" * 50)
         print(car.display_info()) 
-        print("-" * 160)
-        
-
-search_cars_by_make(df)
+    
+    print("-" * 50)
+    
+search_cars(df)
