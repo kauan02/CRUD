@@ -1,26 +1,26 @@
 class Car:
-    def __init__(self, make, model, body, mileage, price, year, country, condition, fuel_type, fuel_consumption, drivetrain, gearbox, power_hp, seats, doors, full_service_history, non_smoker_vehicle, previous_owners, seller, image_url):
-        self.make = make
-        self.model = model
-        self.body = body
-        self.mileage = mileage
-        self.price = price
-        self.year = year
-        self.country = country
-        self.condition = condition
-        self.fuel_type = fuel_type
-        self.fuel_consumption = fuel_consumption
-        self.drivetrain = drivetrain
-        self.gearbox = gearbox
-        self.power_hp = power_hp
-        self.seats = seats
-        self.doors = doors
-        self.full_service_history = full_service_history
-        self.non_smoker_vehicle = non_smoker_vehicle
-        self.previous_owners = previous_owners
-        self.seller = seller
-        self.image_url = image_url
-        
-    def display_info(self):
-        info = f"Make: {self.make}\nModel: {self.model}\nBody: {self.body}\nMileage: {self.mileage}\nPrice: {self.price}\nYear: {self.year}\nCountry: {self.country}\nCondition: {self.condition}\nFuel Type: {self.fuel_type}\nFuel Consumption: {self.fuel_consumption}\nDrivetrain: {self.drivetrain}\nGearbox: {self.gearbox}\nPower (HP): {self.power_hp}\nSeats: {self.seats}\nDoors: {self.doors}\nFull Service History: {self.full_service_history}\nNon-Smoker Vehicle: {self.non_smoker_vehicle}\nPrevious Owners: {self.previous_owners}\nSeller: {self.seller}\nImage URL: {self.image_url}"
-        return info
+    def __init__(self, **kwargs):
+        self.make = kwargs.get('make')
+        self.model = kwargs.get('model')
+        self.body = kwargs.get('body')
+        self.mileage = kwargs.get('mileage_km')
+        self.price = kwargs.get('price')
+        self.year = kwargs.get('year')
+        self.country = kwargs.get('country')
+        self.condition = kwargs.get('condition')
+        self.fuel_type = kwargs.get('fuel_type')
+        self.fuel_consumption = kwargs.get('fuel_consumption_l')
+        self.drivetrain = kwargs.get('drivetrain')
+        self.gearbox = kwargs.get('gearbox')
+        self.power_hp = kwargs.get('power_hp')
+        self.seats = kwargs.get('seats')
+        self.doors = kwargs.get('doors')
+        self.full_service_history = kwargs.get('full_service_history')
+        self.non_smoker_vehicle = kwargs.get('non_smoker_vehicle')
+        self.previous_owners = kwargs.get('previous_owners')
+        self.seller = kwargs.get('seller')
+        self.image_url = kwargs.get('image_url')
+
+    def __str__(self):
+        details = [f"{k.replace('_', ' ').title()}: {v}" for k, v in vars(self).items()]
+        return "\n".join(details)
